@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars and fill in. terraform.tfvars is gitignored.
+aws_region    = "ap-south-1"
+domain_name   = "shreyansh.dev"
+include_www   = true
+github_repo   = "your-github-username/portfolio"
+github_branch = "main"
