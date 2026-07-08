@@ -20,7 +20,7 @@ npm run preview  # serve the production build locally
 ## Edit content
 
 Almost all copy lives in one file:
-[`src/data/portfolio.ts`](src/data/portfolio.ts) — profile, skills, experience,
+[`src/data/portfolio.ts`](src/data/portfolio.ts): profile, skills, experience,
 projects, and case studies. Components read from it, so most updates are
 data-only: edit, commit, push, and CI deploys it.
 

@@ -81,21 +81,21 @@ src/
 
 ### Notable pieces
 
-- **`KubeAIBackground`** — an HTML5 Canvas animation (drifting node graph +
+- **`KubeAIBackground`** is an HTML5 Canvas animation (drifting node graph +
   signal pulses + a faint Kubernetes helm wheel). It is DPR-aware, uses
   delta-time motion so uneven frames do not stutter, honors
   `prefers-reduced-motion`, and mounts only after the hero entrance completes so
   it never contends with first paint.
-- **`SkillTerminal`** — a fake but interactive shell rendered in the Skills
+- **`SkillTerminal`** is a fake but interactive shell rendered in the Skills
   section. Commands: `help`, `whoami`, `ls [category]`, `cat <skill>`, `levels`,
   `kubectl get pods` (lists projects as pods), `contact`, `sudo` (easter egg),
   `clear`. It is purely client-side; there is no real shell behind it.
-- **`TechIcon`** — maps technology names to inline brand SVGs (react-icons)
+- **`TechIcon`** maps technology names to inline brand SVGs (react-icons)
   with Lucide fallbacks for non-brand concepts.
 
 ### Zero-external-asset constraint
 
-Everything the browser loads is served from our own origin — no third-party CDNs,
+Everything the browser loads is served from our own origin, with no third-party CDNs,
 fonts, or scripts:
 
 - **Fonts** are self-hosted via `@fontsource` (Inter + JetBrains Mono) and bundled.
@@ -147,7 +147,7 @@ lets client-side/deep-link paths resolve to the app shell instead of an S3 error
   short-lived **OIDC** token. The trust policy restricts assumption to this repo
   and the `main` branch (`repo:ReyKTBFFH/portfolio:ref:refs/heads/main`).
 - **Least-privilege deploy role.** The role can only sync objects to this bucket
-  and create/read invalidations on this distribution — nothing else.
+  and create/read invalidations on this distribution, nothing else.
 - **Shared account resource.** The GitHub OIDC provider is an account-level
   singleton, so it is referenced as a Terraform `data` source (not managed here);
   destroying this stack cannot delete a provider other stacks may rely on.
