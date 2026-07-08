@@ -16,3 +16,7 @@ infra/*.tfvars
 !infra/*.tfvars.example
 crash.log
 *.tsbuildinfo
+
+# Terraform plan files
+infra/tfplan
+infra/tfplan*
