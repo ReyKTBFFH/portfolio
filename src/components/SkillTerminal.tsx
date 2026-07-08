@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { skillCategories, profile } from "../data/portfolio";
+import { skillCategories, projects, profile } from "../data/portfolio";
 
 type Line = { text: string; tone?: "prompt" | "error" | "accent" };
 
@@ -16,28 +16,29 @@ function band(level: number): string {
 
 const HELP: Line[] = [
   { text: "Available commands:" },
-  { text: "  whoami          — who am I" },
-  { text: "  ls [category]   — list skills (or all categories)" },
-  { text: "  cat <skill>     — show a skill's proficiency" },
-  { text: "  levels          — proficiency scale" },
-  { text: "  contact         — how to reach me" },
-  { text: "  clear           — clear the screen" },
-  { text: "  help            — this message" },
+  { text: "  whoami          - who am I" },
+  { text: "  ls [category]   - list skills (or all categories)" },
+  { text: "  cat <skill>     - show a skill's proficiency" },
+  { text: "  levels          - proficiency scale" },
+  { text: "  kubectl get pods - list my projects as pods" },
+  { text: "  contact         - how to reach me" },
+  { text: "  clear           - clear the screen" },
+  { text: "  help            - this message" },
 ];
 
 const LEVELS: Line[] = [
   { text: "Proficiency scale:" },
-  { text: "  Learning  (<60%)   — actively ramping up" },
-  { text: "  Working   (60–79%) — practical, hands-on experience" },
-  { text: "  Advanced  (80–89%) — production usage at scale" },
-  { text: "  Expert    (90%+)   — deep, day-to-day expertise" },
+  { text: "  Learning  (<60%)   - actively ramping up" },
+  { text: "  Working   (60-79%) - practical, hands-on experience" },
+  { text: "  Advanced  (80-89%) - production usage at scale" },
+  { text: "  Expert    (90%+)   - deep, day-to-day expertise" },
 ];
 
 const QUICK = ["help", "whoami", "ls", "cat kubernetes", "contact"];
 
 export default function SkillTerminal() {
   const [history, setHistory] = useState<Line[]>([
-    { text: "Skills explorer — type 'help' to get started.", tone: "accent" },
+    { text: "Skills explorer. Type 'help' to get started.", tone: "accent" },
   ]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -88,9 +89,61 @@ export default function SkillTerminal() {
           { text: "Sorry, guest is not in the sudoers file.", tone: "error" },
           { text: "This incident will be reported. 🚨", tone: "error" },
           { text: "" },
-          { text: "(psst — you don't need root to hire me. try 'contact')", tone: "accent" },
+          { text: "(psst, you don't need root to hire me. try 'contact')", tone: "accent" },
         ];
         break;
+      case "kubectl":
+      case "k": {
+        const sub = rest.map((r) => r.toLowerCase());
+        const res = sub[1];
+        if (sub[0] === "get" && ["pods", "pod", "po", "all"].includes(res)) {
+          const rows = projects.map((p) => {
+            const live = /live|running/i.test(p.status || "");
+            const slug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+            const h = Math.abs(
+              [...p.name].reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0)
+            );
+            return {
+              name: `${slug}-${h.toString(36).padStart(9, "x").slice(0, 9)}`,
+              ready: live ? "1/1" : "0/1",
+              status: live ? "Running" : "ContainerCreating",
+              restarts: "0",
+              age: `${(h % 160) + 20}d`,
+            };
+          });
+          const w = Math.max(...rows.map((r) => r.name.length), 4) + 3;
+          out = [
+            { text: 'namespace "portfolio"', tone: "accent" },
+            {
+              text:
+                "NAME".padEnd(w) +
+                "READY".padEnd(8) +
+                "STATUS".padEnd(20) +
+                "RESTARTS".padEnd(11) +
+                "AGE",
+            },
+            ...rows.map((r) => ({
+              text:
+                r.name.padEnd(w) +
+                r.ready.padEnd(8) +
+                r.status.padEnd(20) +
+                r.restarts.padEnd(11) +
+                r.age,
+            })),
+          ];
+        } else if (sub[0] === "get" && res) {
+          out = [
+            { text: `No resources of type "${res}" in namespace "portfolio".`, tone: "error" },
+            { text: "Try: kubectl get pods", tone: "accent" },
+          ];
+        } else {
+          out = [
+            { text: "usage: kubectl get pods", tone: "accent" },
+            { text: "  lists my projects as running pods" },
+          ];
+        }
+        break;
+      }
       case "ls": {
         const cat = skillCategories.find((c) => c.id === arg);
         if (cat) {
@@ -150,7 +203,7 @@ export default function SkillTerminal() {
             <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
             <span className="h-3 w-3 rounded-full bg-accent/80" />
           </div>
-          <span className="font-mono text-xs text-faint">shreyansh@skills — zsh</span>
+          <span className="font-mono text-xs text-faint">shreyansh@skills - zsh</span>
           <span className="w-10" />
         </div>
 

@@ -1,9 +1,8 @@
 # GitHub Actions authenticates via OIDC — no long-lived AWS keys stored anywhere.
-resource "aws_iam_openid_connect_provider" "github" {
-  url             = "https://token.actions.githubusercontent.com"
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
-  tags            = var.tags
+# The provider is an account-level singleton (one per URL); it already exists in
+# this account, so we reference it rather than manage/own it here.
+data "aws_iam_openid_connect_provider" "github" {
+  url = "https://token.actions.githubusercontent.com"
 }
 
 data "aws_iam_policy_document" "gha_assume" {
@@ -13,7 +12,7 @@ data "aws_iam_policy_document" "gha_assume" {
 
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github.arn]
+      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
     }
 
     condition {

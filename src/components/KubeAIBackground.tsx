@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 // net) with signal pulses flowing along edges, plus a faint rotating Kubernetes
 // helm wheel. Rendered on a single canvas; honors prefers-reduced-motion.
 
-const BLUE = "50,108,229"; // accent — Kubernetes blue
-const CYAN = "56,189,248"; // cyan — AI signal
+const BLUE = "50,108,229"; // accent - Kubernetes blue
+const CYAN = "56,189,248"; // cyan - AI signal
 
 type Node = { x: number; y: number; vx: number; vy: number; r: number; hex: boolean };
 type Pulse = { a: number; b: number; t: number; speed: number };
@@ -91,7 +91,7 @@ export default function KubeAIBackground() {
 
     const step = (now: number) => {
       // Delta-time factor (1 = a 60fps frame). Clamped so a long first/stalled
-      // frame nudges motion instead of teleporting it — keeps load smooth.
+      // frame nudges motion instead of teleporting it, which keeps load smooth.
       const f = last ? Math.min(now - last, 48) / 16.667 : 1;
       last = now;
       if (canvas.style.opacity !== "1") canvas.style.opacity = "1"; // fade in once drawing
@@ -186,7 +186,7 @@ export default function KubeAIBackground() {
       cancelAnimationFrame(raf); // one static frame only
     } else {
       // This component is mounted only once the hero title finishes typing, so
-      // there's no contention to wait out — a short settle keeps the fade-in
+      // there's no contention to wait out; a short settle keeps the fade-in
       // graceful. The static grid/glow cover the brief gap.
       timer = window.setTimeout(() => {
         last = 0; // reset so the first drawn frame doesn't inherit a stale delta

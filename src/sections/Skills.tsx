@@ -23,7 +23,7 @@ export default function Skills() {
         <SectionHeading
           eyebrow="ls -la skills/"
           title="What I build with"
-          intro="A DevSecOps toolchain centered on Kubernetes, infrastructure-as-code, and — increasingly — applied AI."
+          intro="A DevSecOps toolchain centered on Kubernetes, infrastructure-as-code, and, increasingly, applied AI."
         />
 
         {/* Proficiency cards */}

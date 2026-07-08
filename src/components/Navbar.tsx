@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Briefcase, FolderGit2, LineChart, Mail, Menu, Terminal, User, X } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { nav, profile } from "../data/portfolio";
+
+const navIcons: Record<string, LucideIcon> = {
+  About: User,
+  Skills: Terminal,
+  Experience: Briefcase,
+  Projects: FolderGit2,
+  Impact: LineChart,
+  Contact: Mail,
+};
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,15 +35,19 @@ export default function Navbar() {
         </a>
 
         <div className="hidden items-center gap-8 md:flex">
-          {nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="link-underline text-sm text-muted transition-colors hover:text-ink"
-            >
-              {item.label}
-            </a>
-          ))}
+          {nav.map((item) => {
+            const Icon = navIcons[item.label];
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className="link-underline inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
+              >
+                {Icon && <Icon size={15} />}
+                {item.label}
+              </a>
+            );
+          })}
           <a
             href={profile.resumeUrl}
             download
@@ -55,16 +69,20 @@ export default function Navbar() {
       {open && (
         <div className="border-t border-border bg-base/95 md:hidden">
           <div className="section-shell flex flex-col gap-1 py-4">
-            {nav.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2 text-sm text-muted hover:bg-surface hover:text-ink"
-              >
-                {item.label}
-              </a>
-            ))}
+            {nav.map((item) => {
+              const Icon = navIcons[item.label];
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 rounded-md px-2 py-2 text-sm text-muted hover:bg-surface hover:text-ink"
+                >
+                  {Icon && <Icon size={16} />}
+                  {item.label}
+                </a>
+              );
+            })}
             <a
               href={profile.resumeUrl}
               download
