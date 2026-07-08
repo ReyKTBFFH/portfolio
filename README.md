@@ -1,33 +1,43 @@
-# Shreyansh Mishra — Portfolio
+# Shreyansh Mishra · Portfolio
 
-Personal portfolio for a DevSecOps & Kubernetes engineer. Static React SPA,
-hosted on AWS S3 + CloudFront.
+Personal portfolio for a DevSecOps & Kubernetes engineer. A static React SPA
+hosted on AWS S3 + CloudFront, provisioned with Terraform and deployed via
+GitHub Actions.
 
-**Stack:** React 18 · TypeScript · Vite · Tailwind CSS · Framer Motion · Lucide.
+**Live:** https://shreyanshmishra.cloud
+
+**Stack:** React 18 · TypeScript · Vite · Tailwind CSS · Framer Motion · Lucide / react-icons.
 
 ## Develop
 
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-npm run build    # → dist/
+npm run build    # type-check + production build → dist/
 npm run preview  # serve the production build locally
 ```
 
 ## Edit content
 
-All copy lives in one file: [`src/data/portfolio.ts`](src/data/portfolio.ts) —
-profile, skills, experience, projects, and case studies. Components read from it,
-so most updates are data-only.
+Almost all copy lives in one file:
+[`src/data/portfolio.ts`](src/data/portfolio.ts) — profile, skills, experience,
+projects, and case studies. Components read from it, so most updates are
+data-only: edit, commit, push, and CI deploys it.
 
-**Before going live, update:**
-- `profile.socials.github` — your GitHub URL (placeholder in `portfolio.ts`).
-- Project blurbs for **1aarambh** and **Vaacha** (marked with `[Add ...]`).
-
-The résumé PDF is served from [`public/Shreyansh-Mishra-Resume.pdf`](public/).
+The résumé PDF is served from
+[`public/Shreyansh-Mishra-Resume.pdf`](public/Shreyansh-Mishra-Resume.pdf).
 
 ## Deploy
 
-Infrastructure and CI/CD are documented in [`infra/README.md`](infra/README.md):
-Terraform provisions S3 + CloudFront + Route 53 + an OIDC deploy role, and
-`.github/workflows/deploy.yml` builds and ships on every push to `main`.
+Every push to `main` triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
+which builds the site, assumes an AWS role via OIDC (no stored keys), syncs
+`dist/` to S3, and invalidates CloudFront. A run takes ~30s.
+
+Infrastructure is Terraform in [`infra/`](infra/) (private S3 + CloudFront + ACM
++ Route 53 + the OIDC deploy role); see [`infra/README.md`](infra/README.md) for
+provisioning steps.
+
+## Learn more
+
+See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the full architecture: request/deploy
+flows, the frontend model, hosting, DNS/TLS, security, and cost.
