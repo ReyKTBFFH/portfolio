@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Briefcase, FolderGit2, LineChart, Mail, Menu, Terminal, User, X } from "lucide-react";
+import { Briefcase, FolderGit2, LineChart, Mail, Menu, Server, Terminal, User, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { nav, profile } from "../data/portfolio";
 
@@ -8,6 +8,7 @@ const navIcons: Record<string, LucideIcon> = {
   Skills: Terminal,
   Experience: Briefcase,
   Projects: FolderGit2,
+  Platform: Server,
   Impact: LineChart,
   Contact: Mail,
 };
@@ -31,7 +32,8 @@ export default function Navbar() {
     >
       <nav className="section-shell flex h-16 items-center justify-between">
         <a href="#top" className="font-mono text-sm font-medium tracking-tight">
-          <span className="text-accent">~/</span>shreyansh
+          <span className="text-faint">context:</span>{" "}
+          <span className="text-accent">production</span>
         </a>
 
         <div className="hidden items-center gap-8 md:flex">

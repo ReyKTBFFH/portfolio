@@ -7,38 +7,32 @@ const allSkills = skillCategories.flatMap((c) =>
   c.skills.map((s) => ({ ...s, category: c.title }))
 );
 
-function band(level: number): string {
-  if (level >= 90) return "Expert";
-  if (level >= 80) return "Advanced";
-  if (level >= 60) return "Working";
-  return "Learning";
-}
-
 const HELP: Line[] = [
   { text: "Available commands:" },
-  { text: "  whoami          - who am I" },
-  { text: "  ls [category]   - list skills (or all categories)" },
-  { text: "  cat <skill>     - show a skill's proficiency" },
-  { text: "  levels          - proficiency scale" },
-  { text: "  kubectl get pods - list my projects as pods" },
-  { text: "  contact         - how to reach me" },
-  { text: "  clear           - clear the screen" },
-  { text: "  help            - this message" },
+  { text: "  kubectl get pods  - list projects as running pods" },
+  { text: "  kubectl get skills - list toolchain (alias: get skills)" },
+  { text: "  whoami            - operator profile" },
+  { text: "  ls [category]     - list skills by category" },
+  { text: "  cat <skill>       - show skill details" },
+  { text: "  levels            - proficiency scale" },
+  { text: "  contact           - how to reach me" },
+  { text: "  clear             - clear the screen" },
+  { text: "  help              - this message" },
 ];
 
 const LEVELS: Line[] = [
   { text: "Proficiency scale:" },
-  { text: "  Learning  (<60%)   - actively ramping up" },
-  { text: "  Working   (60-79%) - practical, hands-on experience" },
-  { text: "  Advanced  (80-89%) - production usage at scale" },
-  { text: "  Expert    (90%+)   - deep, day-to-day expertise" },
+  { text: "  Learning  - actively ramping up" },
+  { text: "  Working   - practical, hands-on experience" },
+  { text: "  Advanced  - production usage at scale" },
+  { text: "  Expert    - deep, day-to-day expertise" },
 ];
 
-const QUICK = ["help", "whoami", "ls", "cat kubernetes", "contact"];
+const QUICK = ["kubectl get pods", "kubectl get skills", "whoami", "cat kubernetes", "contact"];
 
 export default function SkillTerminal() {
   const [history, setHistory] = useState<Line[]>([
-    { text: "Skills explorer. Type 'help' to get started.", tone: "accent" },
+    { text: "Skills console ready. Try: kubectl get pods", tone: "accent" },
   ]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -51,7 +45,8 @@ export default function SkillTerminal() {
   const run = (raw: string) => {
     const cmd = raw.trim();
     if (!cmd) return;
-    const [main, ...rest] = cmd.toLowerCase().split(/\s+/);
+    const parts = cmd.toLowerCase().split(/\s+/);
+    const [main, ...rest] = parts;
     const arg = rest.join(" ");
     let out: Line[] = [];
 
@@ -80,33 +75,51 @@ export default function SkillTerminal() {
           { text: `  linkedin  ${profile.socials.linkedin}` },
           { text: `  github    ${profile.socials.github}` },
           { text: "" },
-          { text: "…or just scroll down to the contact section. 📬" },
+          { text: "…or scroll to the contact section." },
         ];
         break;
       case "sudo":
         out = [
           { text: "[sudo] password for guest:" },
           { text: "Sorry, guest is not in the sudoers file.", tone: "error" },
-          { text: "This incident will be reported. 🚨", tone: "error" },
+          { text: "This incident will be reported.", tone: "error" },
           { text: "" },
-          { text: "(psst, you don't need root to hire me. try 'contact')", tone: "accent" },
+          { text: "(you don't need root to hire me. try 'contact')", tone: "accent" },
         ];
         break;
       case "kubectl":
       case "k": {
         const sub = rest.map((r) => r.toLowerCase());
         const res = sub[1];
-        if (sub[0] === "get" && ["pods", "pod", "po", "all"].includes(res)) {
+        if (sub[0] === "get" && ["skills", "skill"].includes(res)) {
+          const w = Math.max(...allSkills.map((s) => s.name.length), 4) + 3;
+          out = [
+            { text: 'namespace "portfolio"', tone: "accent" },
+            {
+              text:
+                "NAME".padEnd(w) +
+                "CATEGORY".padEnd(28) +
+                "LEVEL".padEnd(12) +
+                "CONTEXT",
+            },
+            ...allSkills.map((s) => ({
+              text:
+                s.name.padEnd(w) +
+                s.category.padEnd(28) +
+                s.band.padEnd(12) +
+                s.context,
+            })),
+          ];
+        } else if (sub[0] === "get" && ["pods", "pod", "po", "all"].includes(res)) {
           const rows = projects.map((p) => {
-            const live = /live|running/i.test(p.status || "");
             const slug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
             const h = Math.abs(
               [...p.name].reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0)
             );
             return {
               name: `${slug}-${h.toString(36).padStart(9, "x").slice(0, 9)}`,
-              ready: live ? "1/1" : "0/1",
-              status: live ? "Running" : "ContainerCreating",
+              ready: p.ready,
+              status: p.status,
               restarts: "0",
               age: `${(h % 160) + 20}d`,
             };
@@ -134,22 +147,34 @@ export default function SkillTerminal() {
         } else if (sub[0] === "get" && res) {
           out = [
             { text: `No resources of type "${res}" in namespace "portfolio".`, tone: "error" },
-            { text: "Try: kubectl get pods", tone: "accent" },
+            { text: "Try: kubectl get pods | kubectl get skills", tone: "accent" },
           ];
         } else {
           out = [
-            { text: "usage: kubectl get pods", tone: "accent" },
-            { text: "  lists my projects as running pods" },
+            { text: "usage: kubectl get pods | kubectl get skills", tone: "accent" },
           ];
         }
         break;
       }
+      case "get":
+        if (rest[0] === "skills" || rest[0] === "skill") {
+          run(`kubectl get skills`);
+          return;
+        }
+        if (rest[0] === "pods" || rest[0] === "pod") {
+          run(`kubectl get pods`);
+          return;
+        }
+        out = [{ text: `get: unknown resource. Try: kubectl get pods`, tone: "error" }];
+        break;
       case "ls": {
         const cat = skillCategories.find((c) => c.id === arg);
         if (cat) {
           out = [
             { text: `${cat.title}:`, tone: "accent" },
-            ...cat.skills.map((s) => ({ text: `  ${s.name.padEnd(20)} ${s.level}%` })),
+            ...cat.skills.map((s) => ({
+              text: `  ${s.name.padEnd(20)} ${s.band.padEnd(10)} ${s.context}`,
+            })),
           ];
         } else if (arg) {
           out = [{ text: `No category '${arg}'. Try: ls`, tone: "error" }];
@@ -158,7 +183,7 @@ export default function SkillTerminal() {
             { text: "Categories:", tone: "accent" },
             ...skillCategories.map((c) => ({ text: `  ${c.id.padEnd(14)} ${c.title}` })),
             { text: "" },
-            { text: "Tip: ls <category>  ·  cat <skill>" },
+            { text: "Tip: ls <category>  |  cat <skill>" },
           ];
         }
         break;
@@ -168,8 +193,9 @@ export default function SkillTerminal() {
         if (s) {
           out = [
             { text: `${s.name}`, tone: "accent" },
-            { text: `  category:    ${s.category}` },
-            { text: `  proficiency: ${s.level}%  (${band(s.level)})` },
+            { text: `  category: ${s.category}` },
+            { text: `  level:    ${s.band}` },
+            { text: `  context:  ${s.context}` },
           ];
         } else {
           out = [{ text: `cat: ${arg || "?"}: no such skill. Try: ls`, tone: "error" }];
@@ -196,18 +222,16 @@ export default function SkillTerminal() {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="overflow-hidden rounded-xl border border-border bg-base shadow-2xl shadow-black/40">
-        {/* Title bar */}
         <div className="flex items-center justify-between border-b border-border bg-surface px-4 py-3">
           <div className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-full bg-red-500/80" />
             <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
             <span className="h-3 w-3 rounded-full bg-accent/80" />
           </div>
-          <span className="font-mono text-xs text-faint">shreyansh@skills - zsh</span>
+          <span className="font-mono text-xs text-faint">kubectl --context=portfolio</span>
           <span className="w-10" />
         </div>
 
-        {/* Output */}
         <div
           ref={scrollRef}
           onClick={() => inputRef.current?.focus()}
@@ -227,7 +251,7 @@ export default function SkillTerminal() {
               onKeyDown={(e) => e.key === "Enter" && run(input)}
               spellCheck={false}
               autoComplete="off"
-              placeholder="enter command…"
+              placeholder="kubectl get pods"
               className="flex-1 bg-transparent font-mono text-ink outline-none placeholder:text-faint"
               aria-label="Skills terminal input"
             />
@@ -235,7 +259,6 @@ export default function SkillTerminal() {
         </div>
       </div>
 
-      {/* Quick commands */}
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         {QUICK.map((q) => (
           <button

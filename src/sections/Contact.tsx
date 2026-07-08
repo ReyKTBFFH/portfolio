@@ -1,19 +1,22 @@
 import { Github, Linkedin, Mail } from "lucide-react";
-import Reveal from "../components/Reveal";
 import { profile } from "../data/portfolio";
 
 export default function Contact() {
   return (
     <section id="contact" className="scroll-mt-20 border-t border-border bg-surface/30 py-24 md:py-32">
       <div className="section-shell">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="eyebrow mb-4">Contact</p>
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="eyebrow mb-4">
+            <span className="text-cyan">CONTACT</span>
+            <span className="mx-2 text-faint">/</span>
+            <span className="normal-case tracking-normal text-muted">reach.operator</span>
+          </p>
           <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-            Let's build something reliable
+            Need someone to harden your platform or ship AI on real infra?
           </h2>
           <p className="mt-4 text-muted">
-            Open to platform, DevOps/DevSecOps, and applied-AI infrastructure roles. The fastest way
-            to reach me is email or LinkedIn.
+            Open to platform, DevOps/DevSecOps, and applied-AI infrastructure roles. Email or
+            LinkedIn is fastest.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -40,7 +43,7 @@ export default function Contact() {
               <Github size={16} /> GitHub
             </a>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

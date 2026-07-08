@@ -17,6 +17,10 @@ export default {
         accent: "#326CE5", // Kubernetes blue
         "accent-soft": "#4C82EA",
         cyan: "#38BDF8",
+        // Operational status
+        healthy: "#34D399",
+        warning: "#FBBF24",
+        info: "#38BDF8",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
