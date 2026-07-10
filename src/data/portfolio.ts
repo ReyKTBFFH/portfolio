@@ -21,8 +21,9 @@ export const profile = {
 
 export const about = {
   summary: [
-    "I'm a Senior Associate Consultant at Infosys specializing in DevSecOps and cloud automation. Much of my work centers on Kubernetes (orchestrating containerized workloads, managing deployments, and building resilient, self-healing infrastructure) alongside Docker, Terraform, and AWS, all with a strong focus on security-by-design.",
-    "I design secure CI/CD pipelines, embed vulnerability scanning and automated patching into delivery, and help teams ship faster without compromising security. Lately I'm exploring the intersection of AI and infrastructure: agentic systems, LLM-powered tooling, and what it takes to make software genuinely AI-native.",
+    "I'm a Senior Associate Consultant at Infosys specializing in DevSecOps and cloud automation. I design secure, scalable CI/CD pipelines with Azure DevOps and Terraform, enabling reliable cloud infrastructure provisioning while reducing manual effort and deployment risk.",
+    "Much of my work centers on Kubernetes and Red Hat OpenShift — orchestrating containerized workloads, managing deployments, and building resilient infrastructure — alongside Docker, IaC, and AWS, all with a strong focus on security-by-design. I collaborate with cross-functional teams on vulnerability scanning, automated patch management, and secure pipeline integrations.",
+    "Beyond core DevOps, I'm exploring the intersection of AI and infrastructure: agentic systems, LLM-powered tooling, and what it takes to make software genuinely AI-native.",
   ],
   highlights: [
     { value: "~60%", label: "Fewer failed production deployments" },
@@ -80,6 +81,7 @@ export const skillCategories: SkillCategory[] = [
     title: "Containers & Orchestration",
     icon: "container",
     skills: [
+      { name: "OpenShift", band: "Expert", context: "Cluster ops, RBAC, SCCs, Routes" },
       { name: "Kubernetes", band: "Expert", context: "Production fleets, Helm, GitOps" },
       { name: "Docker", band: "Expert", context: "Multi-stage builds, registry ops" },
       { name: "Helm", band: "Advanced", context: "Chart authoring, release management" },
@@ -154,11 +156,14 @@ export const experience: Experience[] = [
     role: "Senior Associate Consultant",
     period: "Mar 2025 - Present",
     points: [
-      "Built end-to-end CI/CD workflows in Azure DevOps that cut failed production deployments ~60% and lead time for changes ~70% via automated testing and gated releases.",
-      "Embedded DevSecOps (SAST/DAST/VA + automated patching) into pipelines, decreasing high-severity findings ~70% before release.",
-      "Managed IaC with Terraform and Ansible across Azure and hybrid cloud, achieving >95% staging/production parity with reproducible, auditable deployments.",
-      "Engineered observability with Azure Monitor, AMA and KQL, cutting MTTD/MTTR ~40% and noisy alerts ~50%.",
-      "Automated Active Directory integration for Linux (SSSD/realmd/PAM + Kerberos), reducing user onboarding from days to under an hour.",
+      "Administer and scale Red Hat OpenShift clusters supporting enterprise containerized workloads, managing projects, deployments, RBAC, and pod/node lifecycle to deliver resilient production environments.",
+      "Managed application deployments and rolling updates on OpenShift using Deployments, Routes, and Helm charts, reducing failed production releases by ~60% and shortening lead time for changes by ~70% through automated rollout and rollback strategies.",
+      "Enforced DevSecOps practices on OpenShift and Azure, including image vulnerability scanning, Security Context Constraints (SCCs), and automated patch management, decreasing security regressions and high-severity findings by ~70% before release.",
+      "Managed IaC and configuration orchestration with Terraform and Ansible across OpenShift, Azure, and hybrid cloud environments, achieving >95% environment parity between staging and production and enabling reproducible, auditable deployments.",
+      "Engineered observability and alerting for OpenShift and Azure workloads using Azure Monitor, Azure Monitor Agent (AMA), and KQL, reducing MTTD/MTTR by ~40% and cutting noisy alerts by ~50%.",
+      "Automated Active Directory integration for Linux nodes underpinning the OpenShift platform (SSSD/realmd/PAM + Kerberos) using Ansible playbooks, reducing user onboarding from days to under an hour and lowering password-related helpdesk tickets by ~70%.",
+      "Hardened and tuned the underlying Linux infrastructure (RHEL, Ubuntu, CentOS) supporting OpenShift and other production services, applying CIS-based hardening and kernel/security configs to achieve 99.9% availability for critical workloads.",
+      "Improved incident outcomes and platform reliability by instituting runbooks, automated health checks, and post-incident RCA for OpenShift and cloud services, reducing recurrence of similar incidents by ~60% and shortening resolution time by ~45%.",
     ],
   },
   {
@@ -251,9 +256,9 @@ export const caseStudies: CaseStudy[] = [
     challenge:
       "Frequent failed production deployments and slow, risky releases were eroding delivery confidence.",
     solution:
-      "Rebuilt CI/CD in Azure DevOps with automated testing, gated releases, and DevSecOps controls (SAST/DAST/VA + automated patching).",
+      "Managed OpenShift deployments with Helm, Routes, and rolling updates, and enforced DevSecOps controls including image scanning, SCCs, and automated patch management.",
     impact:
-      "~60% fewer failed deployments, ~70% shorter lead time, and ~70% fewer high-severity findings before release.",
+      "~60% fewer failed releases, ~70% shorter lead time, and ~70% fewer high-severity findings before release.",
   },
   {
     id: "CHANGE-002",
@@ -271,7 +276,7 @@ export const caseStudies: CaseStudy[] = [
     challenge:
       "Linux user onboarding took days and generated a steady stream of password-related helpdesk tickets.",
     solution:
-      "Automated Active Directory integration (SSSD/realmd/PAM + Kerberos) with reusable Ansible playbooks.",
+      "Automated Active Directory integration for OpenShift platform nodes (SSSD/realmd/PAM + Kerberos) with reusable Ansible playbooks.",
     impact:
       "Onboarding dropped from days to under an hour and password-related tickets fell ~70%.",
   },
